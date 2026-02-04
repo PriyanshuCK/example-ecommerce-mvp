@@ -1,23 +1,36 @@
-import { notFound } from 'next/navigation';
-import { getProductById } from '@/lib/data/products';
-import { getAllCategories } from '@/lib/data/categories';
+'use client';
+
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { ProductForm } from '@/components/dashboard/product-form';
+import { useProducts } from '@/lib/hooks/use-storage';
+import { Loader2 } from 'lucide-react';
+import NotFound from './not-found';
+import type { Product } from '@/types';
 
-export const dynamicParams = true;
+export default function EditProductPage() {
+  const params = useParams();
+  const id = params.id as string;
+  const { products, isLoaded, getProductById } = useProducts();
+  const [product, setProduct] = useState<Product | null>(null);
 
-interface EditProductPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
+  useEffect(() => {
+    if (isLoaded && id) {
+      const foundProduct = getProductById(id);
+      setProduct(foundProduct);
+    }
+  }, [id, isLoaded, getProductById]);
 
-export default async function EditProductPage({ params }: EditProductPageProps) {
-  const { id } = await params;
-  const product = await getProductById(id);
-  const categories = await getAllCategories();
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   if (!product) {
-    notFound();
+    return <NotFound />;
   }
 
   return (
@@ -29,7 +42,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
         </p>
       </div>
 
-      <ProductForm categories={categories} product={product} mode="edit" />
+      <ProductForm product={product} mode="edit" />
     </div>
   );
 }

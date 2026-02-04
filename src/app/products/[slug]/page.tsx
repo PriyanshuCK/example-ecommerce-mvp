@@ -1,32 +1,50 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Package, Tag } from 'lucide-react';
-import { getProductBySlug } from '@/lib/data/products';
-import { getCategoryById } from '@/lib/data/categories';
+import { useProducts, useCategories } from '@/lib/hooks/use-storage';
 import { formatINR, formatDate } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
+import NotFound from './not-found';
+import type { Product, Category } from '@/types';
 
-export const dynamicParams = true;
+export default function ProductPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+  const { products, isLoaded: productsLoaded, getProductBySlug } = useProducts();
+  const { categories, isLoaded: categoriesLoaded, getCategoryById } = useCategories();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
 
-interface ProductPageProps {
-  params: Promise<{
-    slug: string;
-  }>;
-}
+  const isLoaded = productsLoaded && categoriesLoaded;
 
-export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = await params;
-  const product = await getProductBySlug(slug);
-  
-  if (!product || product.status !== 'active') {
-    notFound();
+  useEffect(() => {
+    if (isLoaded && slug) {
+      const foundProduct = getProductBySlug(slug);
+      setProduct(foundProduct);
+      if (foundProduct) {
+        setCategory(getCategoryById(foundProduct.categoryId));
+      }
+    }
+  }, [slug, isLoaded, getProductBySlug, getCategoryById]);
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
-  
-  const category = await getCategoryById(product.categoryId);
+
+  if (!product || product.status !== 'active') {
+    return <NotFound />;
+  }
 
   return (
     <div className="min-h-screen bg-background">

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,7 +13,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { deleteProduct } from '@/app/dashboard/products/actions';
+import { useProducts } from '@/lib/hooks/use-storage';
 
 interface DeleteProductDialogProps {
   productId: string;
@@ -24,15 +23,14 @@ interface DeleteProductDialogProps {
 export function DeleteProductDialog({ productId, productName }: DeleteProductDialogProps) {
   const [open, setOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const router = useRouter();
+  const { deleteProduct } = useProducts();
 
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await deleteProduct(productId);
+      deleteProduct(productId);
       toast.success('Product deleted successfully');
       setOpen(false);
-      router.refresh();
     } catch (error) {
       toast.error('Failed to delete product');
     } finally {

@@ -23,20 +23,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import type { Category } from '@/types';
 import { categorySchema, type CategoryFormData } from '@/lib/validation';
 import { slugify } from '@/lib/utils';
-import {
-  createCategoryAction,
-  updateCategoryAction,
-  deleteCategoryAction,
-} from '@/app/dashboard/categories/actions';
+import { useCategories } from '@/lib/hooks/use-storage';
+import { v4 as uuidv4 } from 'uuid';
+import type { Category } from '@/types';
 
-interface CategoryManagerProps {
-  categories: Category[];
-}
-
-export function CategoryManager({ categories }: CategoryManagerProps) {
+export function CategoryManager() {
+  const { categories, createCategory, updateCategory, deleteCategory } = useCategories();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -58,12 +52,18 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
   const handleCreate = async (data: CategoryFormData) => {
     setIsSubmitting(true);
     try {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
+      // Check for duplicate slug
+      const existing = categories.find(c => c.slug === data.slug);
+      if (existing) {
+        throw new Error('A category with this slug already exists');
+      }
 
-      await createCategoryAction(formData);
+      const category: Category = {
+        id: uuidv4(),
+        ...data,
+      };
+
+      createCategory(category);
       toast.success('Category created successfully');
       setIsCreating(false);
       createForm.reset();
@@ -81,12 +81,13 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
   const handleUpdate = async (categoryId: string, data: CategoryFormData) => {
     setIsSubmitting(true);
     try {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
+      // Check for duplicate slug (excluding current category)
+      const existing = categories.find(c => c.slug === data.slug && c.id !== categoryId);
+      if (existing) {
+        throw new Error('A category with this slug already exists');
+      }
 
-      await updateCategoryAction(categoryId, formData);
+      updateCategory(categoryId, data);
       toast.success('Category updated successfully');
       setEditingId(null);
     } catch (error) {
@@ -105,7 +106,7 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
     
     setIsSubmitting(true);
     try {
-      await deleteCategoryAction(deleteId);
+      deleteCategory(deleteId);
       toast.success('Category deleted successfully');
       setDeleteId(null);
     } catch (error) {

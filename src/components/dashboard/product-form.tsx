@@ -22,16 +22,19 @@ import Link from 'next/link';
 import type { Product, Category } from '@/types';
 import { productSchema, type ProductFormData } from '@/lib/validation';
 import { slugify } from '@/lib/utils';
-import { createProductAction, updateProductAction } from '@/app/dashboard/products/actions';
+import { useProducts, useCategories } from '@/lib/hooks/use-storage';
+import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'sonner';
 
 interface ProductFormProps {
-  categories: Category[];
   product?: Product;
   mode: 'create' | 'edit';
 }
 
-export function ProductForm({ categories, product, mode }: ProductFormProps) {
+export function ProductForm({ product, mode }: ProductFormProps) {
   const router = useRouter();
+  const { products, createProduct, updateProduct } = useProducts();
+  const { categories, isLoaded: categoriesLoaded } = useCategories();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [slugError, setSlugError] = useState('');
 
@@ -70,25 +73,42 @@ export function ProductForm({ categories, product, mode }: ProductFormProps) {
     setSlugError('');
 
     try {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, String(value));
-      });
+      // Check for duplicate slug
+      const existing = products.find(p => p.slug === data.slug);
+      if (existing && (!product || existing.id !== product.id)) {
+        throw new Error('A product with this slug already exists');
+      }
 
       if (mode === 'create') {
-        await createProductAction(formData);
+        const newProduct: Product = {
+          id: uuidv4(),
+          ...data,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        createProduct(newProduct);
+        toast.success('Product created successfully');
       } else if (product) {
-        await updateProductAction(product.id, formData);
+        updateProduct(product.id, data);
+        toast.success('Product updated successfully');
       }
+      
+      router.push('/dashboard/products');
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message.includes('slug')) {
-          setSlugError(error.message);
-        }
+        setSlugError(error.message);
       }
       setIsSubmitting(false);
     }
   };
+
+  if (!categoriesLoaded) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
