@@ -1,0 +1,28 @@
+{
+  "categories": [
+    {
+      "id": "68e6c776-ebac-437b-8de1-e1191c32efa9",
+      "name": "Electronics",
+      "slug": "electronics",
+      "description": "Latest gadgets and electronic devices"
+    },
+    {
+      "id": "cef61ff2-2795-4c12-af3d-eb46deac6c7d",
+      "name": "Clothing",
+      "slug": "clothing",
+      "description": "Fashion and apparel for all occasions"
+    },
+    {
+      "id": "dddebc24-fed3-4360-b9a7-099bf6d7598c",
+      "name": "Home & Garden",
+      "slug": "home-garden",
+      "description": "Everything for your home and garden"
+    },
+    {
+      "id": "17aa43cc-9745-4123-b1d4-f1c792a990e6",
+      "name": "Books",
+      "slug": "books",
+      "description": "Physical and digital books"
+    }
+  ]
+}

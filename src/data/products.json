@@ -1,0 +1,82 @@
+{
+  "products": [
+    {
+      "id": "36b914e6-7b0f-4cde-a98b-ffac97398333",
+      "name": "Wireless Headphones Pro",
+      "slug": "wireless-headphones-pro",
+      "description": "Premium wireless headphones with active noise cancellation, 30-hour battery life, and superior sound quality. Perfect for music lovers and professionals.",
+      "price": 2499,
+      "stock": 25,
+      "categoryId": "68e6c776-ebac-437b-8de1-e1191c32efa9",
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80",
+      "status": "active",
+      "createdAt": "2026-02-04T12:35:01.291Z",
+      "updatedAt": "2026-02-04T12:35:01.291Z"
+    },
+    {
+      "id": "01804c34-80ad-4fee-b9b4-6db8e029b3be",
+      "name": "Premium Cotton T-Shirt",
+      "slug": "premium-cotton-t-shirt",
+      "description": "100% organic cotton t-shirt with a comfortable fit. Available in multiple colors. Soft, breathable, and perfect for everyday wear.",
+      "price": 599,
+      "stock": 100,
+      "categoryId": "cef61ff2-2795-4c12-af3d-eb46deac6c7d",
+      "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
+      "status": "active",
+      "createdAt": "2026-02-04T12:35:01.291Z",
+      "updatedAt": "2026-02-04T12:35:01.291Z"
+    },
+    {
+      "id": "99668906-b8ec-4fdf-bdbd-eae2b5798049",
+      "name": "Garden Tool Set Deluxe",
+      "slug": "garden-tool-set-deluxe",
+      "description": "Complete garden tool set including trowel, cultivator, transplanter, weeder, and pruning shears. High-quality stainless steel with ergonomic handles.",
+      "price": 1299,
+      "stock": 15,
+      "categoryId": "dddebc24-fed3-4360-b9a7-099bf6d7598c",
+      "image": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&q=80",
+      "status": "active",
+      "createdAt": "2026-02-04T12:35:01.291Z",
+      "updatedAt": "2026-02-04T12:35:01.291Z"
+    },
+    {
+      "id": "a91f45b4-e111-455b-9a0a-ced95f91d03f",
+      "name": "Bestseller Fiction Novel",
+      "slug": "bestseller-fiction-novel",
+      "description": "A gripping tale of mystery and adventure that will keep you on the edge of your seat. Over 1 million copies sold worldwide.",
+      "price": 399,
+      "stock": 50,
+      "categoryId": "17aa43cc-9745-4123-b1d4-f1c792a990e6",
+      "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&q=80",
+      "status": "active",
+      "createdAt": "2026-02-04T12:35:01.291Z",
+      "updatedAt": "2026-02-04T12:35:01.291Z"
+    },
+    {
+      "id": "e63cf4f0-04b2-44ba-9f0c-ef7e2961fc18",
+      "name": "Smart Watch Series 5",
+      "slug": "smart-watch-series-5",
+      "description": "Advanced fitness tracking, heart rate monitoring, GPS, and smartphone integration. Water-resistant up to 50 meters. Battery lasts up to 7 days.",
+      "price": 4999,
+      "stock": 10,
+      "categoryId": "68e6c776-ebac-437b-8de1-e1191c32efa9",
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80",
+      "status": "active",
+      "createdAt": "2026-02-04T12:35:01.291Z",
+      "updatedAt": "2026-02-04T12:35:01.291Z"
+    },
+    {
+      "id": "c2573b18-45f1-43bf-ab99-1808d912f127",
+      "name": "Denim Jacket Classic",
+      "slug": "denim-jacket-classic",
+      "description": "Timeless denim jacket with a vintage wash. Durable construction with brass buttons and multiple pockets. A wardrobe essential.",
+      "price": 1899,
+      "stock": 30,
+      "categoryId": "cef61ff2-2795-4c12-af3d-eb46deac6c7d",
+      "image": "https://images.unsplash.com/photo-1576871337622-98d48d1cf531?w=800&q=80",
+      "status": "active",
+      "createdAt": "2026-02-04T12:35:01.291Z",
+      "updatedAt": "2026-02-04T12:35:01.291Z"
+    }
+  ]
+}
