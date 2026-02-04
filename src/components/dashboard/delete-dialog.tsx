@@ -13,7 +13,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { useProducts } from '@/lib/hooks/use-storage';
+import { useRouter } from 'next/navigation';
+import { deleteProductAction } from '@/app/dashboard/products/actions';
 
 interface DeleteProductDialogProps {
   productId: string;
@@ -23,14 +24,15 @@ interface DeleteProductDialogProps {
 export function DeleteProductDialog({ productId, productName }: DeleteProductDialogProps) {
   const [open, setOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { deleteProduct } = useProducts();
+  const router = useRouter();
 
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      deleteProduct(productId);
+      await deleteProductAction(productId);
       toast.success('Product deleted successfully');
       setOpen(false);
+      router.refresh();
     } catch (error) {
       toast.error('Failed to delete product');
     } finally {

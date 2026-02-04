@@ -3,10 +3,14 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
-import { createProduct, updateProduct, deleteProduct as deleteProductFromDb } from '@/lib/data/products';
-import { getProductBySlug } from '@/lib/data/products';
 import type { Product } from '@/types';
 import { productSchema } from '@/lib/validation';
+import { 
+  createProduct, 
+  updateProduct, 
+  deleteProduct as deleteProductFromDb,
+  getProductBySlug
+} from '@/lib/db/queries';
 
 export async function createProductAction(formData: FormData) {
   const data = {
@@ -78,7 +82,7 @@ export async function updateProductAction(productId: string, formData: FormData)
   redirect('/dashboard/products');
 }
 
-export async function deleteProduct(productId: string) {
+export async function deleteProductAction(productId: string) {
   await deleteProductFromDb(productId);
   
   revalidatePath('/');

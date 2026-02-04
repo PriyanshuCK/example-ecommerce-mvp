@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
@@ -44,5 +42,37 @@ export function ProductCard({ product, category }: ProductCardProps) {
         </CardContent>
       </Card>
     </Link>
+  );
+}
+
+interface ProductGridProps {
+  products: Product[];
+  categories: Category[];
+}
+
+export function ProductGrid({ products, categories }: ProductGridProps) {
+  const getCategory = (categoryId: string) => {
+    return categories.find(c => c.id === categoryId)!;
+  };
+
+  if (products.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground text-lg">No products found</p>
+        <p className="text-muted-foreground">Try adjusting your filters</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          category={getCategory(product.categoryId)}
+        />
+      ))}
+    </div>
   );
 }

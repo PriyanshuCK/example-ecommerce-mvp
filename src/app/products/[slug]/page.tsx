@@ -1,50 +1,35 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Package, Tag } from 'lucide-react';
-import { useProducts, useCategories } from '@/lib/hooks/use-storage';
+import { getProductBySlug } from '@/lib/db/queries';
+import { getCategoryById } from '@/lib/db/queries';
 import { formatINR, formatDate } from '@/lib/utils';
-import { Loader2 } from 'lucide-react';
-import NotFound from './not-found';
-import type { Product, Category } from '@/types';
+import { ArrowLeft, Package, Tag } from 'lucide-react';
 
-export default function ProductPage() {
-  const params = useParams();
-  const slug = params.slug as string;
-  const { products, isLoaded: productsLoaded, getProductBySlug } = useProducts();
-  const { categories, isLoaded: categoriesLoaded, getCategoryById } = useCategories();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [category, setCategory] = useState<Category | null>(null);
-
-  const isLoaded = productsLoaded && categoriesLoaded;
-
-  useEffect(() => {
-    if (isLoaded && slug) {
-      const foundProduct = getProductBySlug(slug);
-      setProduct(foundProduct);
-      if (foundProduct) {
-        setCategory(getCategoryById(foundProduct.categoryId));
-      }
-    }
-  }, [slug, isLoaded, getProductBySlug, getCategoryById]);
-
-  if (!isLoaded) {
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const product = await getProductBySlug(slug);
+  
+  if (!product || product.status !== 'active') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <div className="text-center">
+          <Package className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+          <h1 className="text-2xl font-bold">Product Not Found</h1>
+          <p className="text-muted-foreground">
+            The product you are looking for does not exist.
+          </p>
+          <Link href="/">
+            <Button>Back to Products</Button>
+          </Link>
+        </div>
       </div>
     );
   }
-
-  if (!product || product.status !== 'active') {
-    return <NotFound />;
-  }
+  
+  const category = await getCategoryById(product.categoryId);
 
   return (
     <div className="min-h-screen bg-background">
@@ -59,7 +44,6 @@ export default function ProductPage() {
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Product Image */}
           <div className="aspect-square relative rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
             <Image
               src={product.image}
@@ -71,7 +55,6 @@ export default function ProductPage() {
             />
           </div>
 
-          {/* Product Details */}
           <div className="flex flex-col">
             <div className="mb-6">
               <Badge variant="secondary" className="mb-3">
@@ -111,7 +94,6 @@ export default function ProductPage() {
           </div>
         </div>
 
-        {/* Related Products Section */}
         <section className="mt-16">
           <h2 className="text-2xl font-bold mb-6">Related Products</h2>
           <p className="text-muted-foreground">

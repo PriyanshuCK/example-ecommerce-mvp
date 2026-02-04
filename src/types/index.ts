@@ -19,6 +19,16 @@ export interface Category {
   description: string;
 }
 
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  passwordHash: string;
+  role: string;
+  emailVerified: Date | null;
+  createdAt: string;
+}
+
 export interface ProductWithCategory extends Product {
   category: Category;
 }

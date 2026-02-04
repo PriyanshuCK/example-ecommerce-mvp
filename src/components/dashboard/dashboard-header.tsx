@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { MobileNav } from './mobile-nav';
-import { Package, LayoutDashboard, Tags, Plus, Store } from 'lucide-react';
+import { LayoutDashboard, Store, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function DashboardHeader() {
@@ -28,6 +28,12 @@ export function DashboardHeader() {
             </Button>
           </Link>
           <ThemeToggle />
+          <form action="/api/auth/signout" method="POST">
+            <Button variant="ghost" size="sm" type="submit">
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </form>
         </div>
       </div>
     </header>

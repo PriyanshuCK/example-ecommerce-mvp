@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,6 +13,7 @@ import {
 } from '@/components/ui/select';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import type { Category } from '@/types';
+import Fuse from 'fuse.js';
 
 interface ProductFiltersProps {
   categories: Category[];
@@ -23,7 +25,7 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
 
   const updateFilter = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);
-    if (value && value !== 'all' && value !== 'default') {
+    if (value) {
       params.set(key, value);
     } else {
       params.delete(key);
@@ -48,9 +50,9 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             id="search"
-            placeholder="Search products..."
             value={currentSearch}
             onChange={(e) => updateFilter('search', e.target.value)}
+            placeholder="Search products..."
             className="pl-10"
           />
         </div>

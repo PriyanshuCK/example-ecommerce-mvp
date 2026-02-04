@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { Plus, Pencil, Trash2, ExternalLink } from 'lucide-react';
@@ -13,16 +11,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { useProducts, useCategories } from '@/lib/hooks/use-storage';
+import { getAllProducts } from '@/lib/db/queries';
+import { getAllCategories } from '@/lib/db/queries';
 import { formatINR, formatDate } from '@/lib/utils';
-import { DeleteProductDialog } from '@/components/dashboard/delete-dialog';
-import { Loader2 } from 'lucide-react';
 
-export default function ProductsPage() {
-  const { products, isLoaded: productsLoaded } = useProducts();
-  const { categories, isLoaded: categoriesLoaded } = useCategories();
-
-  const isLoaded = productsLoaded && categoriesLoaded;
+export default async function ProductsPage() {
+  const products = await getAllProducts();
+  const categories = await getAllCategories();
 
   const getCategoryName = (categoryId: string) => {
     return categories.find(c => c.id === categoryId)?.name || 'Uncategorized';
@@ -40,14 +35,6 @@ export default function ProductsPage() {
       </Badge>
     );
   };
-
-  if (!isLoaded) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -125,7 +112,6 @@ export default function ProductsPage() {
                           <Pencil className="h-4 w-4" />
                         </Button>
                       </Link>
-                      <DeleteProductDialog productId={product.id} productName={product.name} />
                     </div>
                   </TableCell>
                 </TableRow>

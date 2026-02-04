@@ -1,8 +1,9 @@
-'use client';
-
 import { ProductForm } from '@/components/dashboard/product-form';
+import { getAllCategories } from '@/lib/db/queries';
 
-export default function NewProductPage() {
+export default async function NewProductPage() {
+  const categories = await getAllCategories();
+
   return (
     <div className="space-y-6">
       <div>
@@ -12,7 +13,7 @@ export default function NewProductPage() {
         </p>
       </div>
 
-      <ProductForm mode="create" />
+      <ProductForm categories={categories} mode="create" />
     </div>
   );
 }

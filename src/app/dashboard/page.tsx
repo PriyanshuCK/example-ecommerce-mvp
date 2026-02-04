@@ -1,32 +1,19 @@
-'use client';
-
 import Link from 'next/link';
 import { Plus, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useProducts, useCategories } from '@/lib/hooks/use-storage';
+import { getAllProducts } from '@/lib/db/queries';
+import { getAllCategories } from '@/lib/db/queries';
 import { formatINR } from '@/lib/utils';
-import { CategoryManager } from '@/components/dashboard/category-manager';
-import { Loader2 } from 'lucide-react';
 
-export default function DashboardPage() {
-  const { products, isLoaded: productsLoaded } = useProducts();
-  const { categories, isLoaded: categoriesLoaded } = useCategories();
-
-  const isLoaded = productsLoaded && categoriesLoaded;
+export default async function DashboardPage() {
+  const products = await getAllProducts();
+  const categories = await getAllCategories();
 
   const totalProducts = products.length;
   const activeProducts = products.filter(p => p.status === 'active').length;
   const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
   const totalCategories = categories.length;
-
-  if (!isLoaded) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -111,10 +98,6 @@ export default function DashboardPage() {
             <Button variant="outline">Create Product</Button>
           </Link>
         </div>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <CategoryManager />
       </div>
     </div>
   );
